@@ -1,4 +1,4 @@
-const input = await Deno.readTextFile(new URL('../input.txt', import.meta.url))
+const input = await Deno.readTextFile(new URL('./input.txt', import.meta.url))
 
 // First, we neatly arrange input into `leftNumbers` and `rightNumbers`.
 const leftNumbers: number[] = []

@@ -1,4 +1,4 @@
-const input = await Deno.readTextFile(new URL('../input.txt', import.meta.url))
+const input = await Deno.readTextFile(new URL('./input.txt', import.meta.url))
 
 // First, we make a list of the numbers on the left, and for the numbers on the
 // right, we compile a dictionary (map) with how often each number occurs.
