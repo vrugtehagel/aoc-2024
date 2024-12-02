@@ -4,8 +4,8 @@ const input = await Deno.readTextFile(new URL('./input.txt', import.meta.url))
 const leftNumbers: number[] = []
 const rightNumbers: number[] = []
 const lines: string[] = input.trim().split('\n')
-for(const line of lines){
-	const [left, right] = line.split(/\s+/).map(number => Number(number))
+for (const line of lines) {
+	const [left, right] = line.split(/\s+/).map((number) => Number(number))
 	leftNumbers.push(left)
 	rightNumbers.push(right)
 }
@@ -16,7 +16,7 @@ rightNumbers.sort((a, b) => a - b)
 
 // Lastly, we compute their differences
 let distance = 0
-for(const [index, leftNumber] of leftNumbers.entries()){
+for (const [index, leftNumber] of leftNumbers.entries()) {
 	const rightNumber = rightNumbers[index]
 	distance += Math.abs(leftNumber - rightNumber)
 }
