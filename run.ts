@@ -14,19 +14,21 @@ async function readFile(path: string): Promise<string | null> {
 async function runPart(number: number): Promise<void> {
 	const mod = await import(`${directory}/part-${number}.ts`)
 	const solution = mod.default
-	const exampleInput = await readFile('example/input.txt')
+	const exampleInput = await readFile(`example/input-${number}.txt`)
+		?? await readFile('example/input.txt')
 	const exampleOutput = await readFile(`example/output-${number}.txt`)
 	console.log(`%cPart ${number}:`, 'color: gray')
 	if (exampleInput == null || exampleOutput == null) {
 		console.log('%c? %cExample not found', 'color: gray')
-	} else if (solution(exampleInput) != exampleOutput) {
+	} else if (await solution(exampleInput) != exampleOutput) {
 		console.log('%c✘ %cExample failed!', 'color: red', 'color: initial')
 		return
 	} else {
 		console.log('%c✓ %cExample ok', 'color: green', 'color: initial')
 	}
-	const input = await readFile('input.txt')
-	console.log('%c? Solution:', 'color: gray', solution(input ?? ''))
+	const input = await readFile(`input-${number}.txt`)
+		?? await readFile('input.txt')
+	console.log('%c? Solution:', 'color: gray', await solution(input ?? ''))
 }
 
 if (part) await runPart(part)
