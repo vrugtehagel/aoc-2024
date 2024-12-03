@@ -1,15 +1,17 @@
 export default async function (input: string): number {
 	// First, we split on "do()", so we know at least the start of those
 	// strings have mul() enabled. Then we chop off anything beyond a don't().
-	const parts = input.split('do()')
+	const sanitized = input.split('do()')
 		.flatMap(part => part.split('don\'t()', 1))
-	// And now we do the exact same as part 1, just over all the parts
+		.join('!')
+	// We join with "!" so we don't stick e.g. a "mu" and a "l(2,3)" together.
+	// This actually doesn't change the result at all, but it's safer.
+
+	// And now we do the exact same as part 1
+	const matches = sanitized.matchAll(/mul\((\d{1,3}),(\d{1,3})\)/g)
 	let result = 0;
-	for(const part of parts){
-		const matches = part.matchAll(/mul\((\d{1,3}),(\d{1,3})\)/g)
-		for(const [full, number, multiplier] of matches){
-			result += number * multiplier
-		}
+	for(const [full, number, multiplier] of matches){
+		result += number * multiplier
 	}
 	return result
 }
