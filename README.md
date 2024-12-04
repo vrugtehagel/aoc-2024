@@ -3,12 +3,7 @@
 Let's try and see how far I can get in AoC using Deno. I might sprinkle types
 into the code, or perhaps not.
 
-To run the solution for a specific day, use:
+The tasks available are:
 
-```bash
-deno task day [day] [?part]
-```
-
-Where `[day]` should be replaced with the day number, and `[?part]` is optional
-and should be either `1` or `2`. For example, `deno task day 2 1` runs the first
-part of day 2. Omitting the `[?part]` argument causes both parts to be run.
+- `deno task day [day]` to run the solution for a specific day. Here, `[day]` should be replaced with the day number (e.g. `deno task day 3`). It then runs each solution, for both parts, both example and real inputs, and compares them against the specified output files, if any.
+- `deno task test` runs all solutions against the real inputs. If an output is not given, the test is skipped. This task runs on commits to `main`.
