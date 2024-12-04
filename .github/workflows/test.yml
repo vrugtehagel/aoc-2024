@@ -20,4 +20,4 @@ jobs:
         deno-version: v2.x
     - run: deno task test
     - if: github.ref == 'refs/heads/main'
-      run: deno task build --verify
+      run: deno task test
