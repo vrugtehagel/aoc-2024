@@ -1,6 +1,7 @@
 {
 	"tasks": {
-		"day": "deno run --allow-read ./run.ts"
+		"day": "deno run --allow-read --allow-run=wat2wasm ./deno/attempt.ts",
+		"test": "deno test --allow-read"
 	},
 	"fmt": {
 		"useTabs": true,

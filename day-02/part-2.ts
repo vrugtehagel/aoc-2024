@@ -1,4 +1,4 @@
-export default function (input: string): number {
+export function solution(input: string): number {
 	// Again we parse it into an array of individual reports
 	const reports: Array<number[]> = input.trim().split('\n')
 		.map((line) => line.split(/\s+/).map((number) => Number(number)))

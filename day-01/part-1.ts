@@ -1,4 +1,4 @@
-export default function (input: string): number {
+export function solution(input: string): number {
 	// First, we neatly arrange input into `leftNumbers` and `rightNumbers`.
 	const leftNumbers: number[] = []
 	const rightNumbers: number[] = []

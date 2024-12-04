@@ -1,4 +1,4 @@
-export default function (input: string): number {
+export function solution(input: string): number {
 	// First, we make a list of the numbers on the left, and for the numbers on the
 	// right, we compile a dictionary (map) with how often each number occurs.
 	const leftNumbers: number[] = []
