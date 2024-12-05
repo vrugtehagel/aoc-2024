@@ -1,23 +1,26 @@
 name: Test
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+    push:
+        branches: ['main']
+    pull_request:
+        branches: ['main']
 
 permissions:
-  contents: read
+    contents: read
 
 jobs:
-  test:
-    name: Run tests
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: denoland/setup-deno@v2
-      with:
-        deno-version: v2.x
-    - run: deno task test
-    - if: github.ref == 'refs/heads/main'
-      run: deno task test
+    test:
+        name: Run tests
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: denoland/setup-deno@v2
+              with:
+                  deno-version: v2.x
+            - run: deno fmt --check
+            - run: deno lint
+            - run: deno check .
+            - run: deno task test
+            - if: github.ref == 'refs/heads/main'
+              run: deno task test
