@@ -10,7 +10,7 @@ export function solution(input: string): number {
 	// And now we do the exact same as part 1
 	const matches = sanitized.matchAll(/mul\((\d{1,3}),(\d{1,3})\)/g)
 	let result = 0
-	for (const [full, number, multiplier] of matches) {
+	for (const [_full, number, multiplier] of matches) {
 		result += Number(number) * Number(multiplier)
 	}
 	return result
