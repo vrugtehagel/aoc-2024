@@ -1,5 +1,5 @@
 (module
-	(import "env" "memory" (memory 1))
+	(import "env" "input" (memory 1))
 	(global $width (mut i32) (i32.const 0))
 	(global $height (mut i32) (i32.const 0))
 
