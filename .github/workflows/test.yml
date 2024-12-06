@@ -22,5 +22,3 @@ jobs:
             - run: deno lint
             - run: deno check .
             - run: deno task test
-            - if: github.ref == 'refs/heads/main'
-              run: deno task test
