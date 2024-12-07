@@ -61,12 +61,12 @@ async function runWATSolution(
 	if (!input) return null
 	if (!skipCompilation) await compileWATSolution(file, wasmFile)
 	const url = new URL(wasmFile, import.meta.url)
-	const memory = new WebAssembly.Memory({ initial: 1 })
+	const memory = new WebAssembly.Memory({ initial: 10 })
 	const env = { input: memory }
-	const wasm = await WebAssembly.instantiateStreaming(fetch(url), { env })
 	const encoder = new TextEncoder()
 	const typedArray = new Uint8Array(memory.buffer)
 	encoder.encodeInto(input, typedArray)
+	const wasm = await WebAssembly.instantiateStreaming(fetch(url), { env })
 	const solution = wasm.instance.exports.solution as CallableFunction
 	return solution()
 }

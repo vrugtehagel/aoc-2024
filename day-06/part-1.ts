@@ -16,7 +16,7 @@ export function solution(input: string): number {
 			break search
 		}
 	}
-	// This should not happen
+	// This should not happen, but TypeScript thinks it can
 	if (!guard) throw Error(`She's gone!`)
 
 	// Let the guard walk around until she leaves
