@@ -1,13 +1,11 @@
 # Advent of Code 2024
 
-Let's try and see how far I can get in AoC using Deno. I might sprinkle types
-into the code, or perhaps not.
+Let's try and see how far I can get in AoC using Deno!
 
-Solutions are written in TypeScript/JavaScript or WASM. The latter can be
-written in `.wat` files and are compiled automatically, but require `wat2wasm`
-to be installed. However, `.wasm` files are committed to the repository, which
-Deno can run, so `wat2wasm` is _not_ necessary to run the existing WASM
-solutions.
+Solutions are written in TypeScript or WASM. The latter can be written in `.wat`
+files and are compiled automatically, but require `wat2wasm` to be installed.
+However, `.wasm` files are committed to the repository, which Deno can run, so
+`wat2wasm` is _not_ necessary to run the existing WASM solutions.
 
 The tasks available are:
 
