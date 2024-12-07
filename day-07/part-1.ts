@@ -12,35 +12,24 @@ export function solution(input: string): number {
 		.reduce((sum, [testValue]) => sum + testValue, 0)
 }
 
-// Tests one testValue and its terms, trying all different configurations until
-// one works. This is a rather naive strategy that ends up being "fast enough"
+// We loop through binary numbers (which are really just regular numbers)
+// Then we translate a "1" into a "+" and a "0" into a "*"
+// So e.g. given `3267: 81 40 27` we loop through 0-4, which are in binary
+// 00, 01, 10, 11, which then translates to 81 * 40 * 27, 81 * 40 + 27, and so
+// on. This requires some bit shifting which usually I'm not a fan of, but this
+// does make it about twice as fast compared to collecting these different
+// configurations of operators in a bunch of arrays.
 function canBeMadeTrue(testValue: number, terms: number[]): boolean {
-	for (const operators of getPossibleOperatorSequences(terms.length - 1)) {
+	for (let binary = 2 ** (terms.length - 1); binary >= 0; binary--) {
 		let result = terms[0]
-		for (const [index, term] of terms.slice(1).entries()) {
-			const operator = operators[index]
-			result = operator(result, term)
+		let bits = binary
+		for (const term of terms.slice(1)) {
+			const bit = bits & 1
+			bits >>= 1
+			if (bit) result += term
+			else result *= term
 		}
 		if (result == testValue) return true
 	}
 	return false
-}
-
-type Operator = (a: number, b: number) => number
-const plus = (a: number, b: number) => a + b
-const times = (a: number, b: number) => a * b
-
-// Gnererate lists of binary numbers of a certain `length`
-// We cache this in the hope of being more efficient
-getPossibleOperatorSequences.cache = new Map<number, Array<Operator[]>>()
-getPossibleOperatorSequences.cache.set(0, [[]])
-function getPossibleOperatorSequences(length: number): Array<Operator[]> {
-	const cached = getPossibleOperatorSequences.cache.get(length)
-	if (cached) return cached
-	const sequences = getPossibleOperatorSequences(length - 1)
-	const cache = [...sequences].flatMap((sequence) => {
-		return [[plus, ...sequence], [times, ...sequence]]
-	})
-	getPossibleOperatorSequences.cache.set(length, cache)
-	return cache
 }
