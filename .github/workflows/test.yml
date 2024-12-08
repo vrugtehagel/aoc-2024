@@ -1,0 +1,33 @@
+name: Test
+
+on:
+    push:
+        branches: ['main']
+    pull_request:
+        branches: ['main']
+
+permissions:
+    contents: read
+
+jobs:
+    test:
+        name: Run tests
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/create-github-app-token@v1
+              id: app_token
+              with:
+                  app-id: ${{ secrets.APP_ID }}
+                  private-key: ${{ secrets.APP_PEM }}
+                  owner: ${{ github.repository_owner }}
+            - uses: actions/checkout@v4
+              with:
+                  submodules: recursive
+                  token: ${{ steps.app_token.outputs.token }}
+            - uses: denoland/setup-deno@v2
+              with:
+                  deno-version: v2.x
+            - run: deno fmt --check
+            - run: deno lint
+            - run: deno check .
+            - run: deno task test
