@@ -1,6 +1,7 @@
 # Advent of Code 2024
 
-Let's try and see how far I can get in AoC using [Deno](https://deno.com/)!
+Let's try and see how far I can get in
+[Advent of Code](https://adventofcode.com/) using [Deno](https://deno.com/)!
 
 Solutions are written in TypeScript or WASM. The latter can be written in `.wat`
 files and are compiled automatically, but require `wat2wasm` to be installed.
