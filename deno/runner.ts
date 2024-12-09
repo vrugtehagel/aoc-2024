@@ -62,7 +62,11 @@ async function runWATSolution(
 	if (!skipCompilation) await compileWATSolution(file, wasmFile)
 	const url = new URL(wasmFile, import.meta.url)
 	const memory = new WebAssembly.Memory({ initial: 10 })
-	const env = { input: memory }
+	const log = (i32: number) => console.log(i32)
+	const memlog = (start: number, length: number) => {
+		console.log(...typedArray.slice(start, start + length))
+	}
+	const env = { input: memory, log, memlog }
 	const encoder = new TextEncoder()
 	const typedArray = new Uint8Array(memory.buffer)
 	encoder.encodeInto(input, typedArray)
