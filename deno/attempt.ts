@@ -9,7 +9,7 @@ for (const part of [1, 2]) {
 		const rawExpected = await getExpectedOutput(day, part, example)
 		const output = await runSolution(day, part, example)
 		if (output === null) continue
-		const convertToNumber = typeof output == 'number' && rawExpected != null
+		const convertToNumber = rawExpected?.includes(`${Number(rawExpected)}`)
 		const expected = convertToNumber ? Number(rawExpected) : rawExpected
 		const test = `Part ${part}` + (example ? ' (example)' : '')
 		let status
