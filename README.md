@@ -39,7 +39,6 @@ Let's try and see how far I can get in
                     @@@@@@@@@     @@@@@@@@
 ```
 
-
 Solutions are written in TypeScript or WASM. The latter can be written in `.wat`
 files and are compiled automatically, but require `wat2wasm` to be installed.
 However, `.wasm` files are committed to the repository, which Deno can run, so
