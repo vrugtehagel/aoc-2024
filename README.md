@@ -46,9 +46,11 @@ However, `.wasm` files are committed to the repository, which Deno can run, so
 
 The tasks available are:
 
-- `deno task day [day]` to run the solution for a specific day. Here, `[day]`
-  should be replaced with the day number (e.g. `deno task day 3`). It then runs
-  each solution, for both parts, both example and real inputs, and compares them
-  against the specified output files, if any.
+- `deno task day [day]` to run the solution for a specific day, with an optional
+  `--example` flag. Here, `[day]` should be replaced with the day number (e.g.
+  `deno task day 3`). It then runs each solution, for both parts, both example
+  and real inputs, and compares them against the specified output files, if any.
+  If the `--example` flag is given, the main inputs are ignored (for easier
+  debugging).
 - `deno task test` runs all solutions against the real inputs. If an output is
   not given, the test is skipped. This task runs on commits to `main`.

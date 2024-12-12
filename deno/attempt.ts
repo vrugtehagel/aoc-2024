@@ -1,11 +1,13 @@
 import { getExpectedOutput, runSolution } from './runner.ts'
 
 const day = Number(Deno.args[0])
+const onlyExample = Deno.args[1] == '--example'
 if (!day) throw Error('Invalid day')
 
 const runs = []
+const runExamples = onlyExample ? [true] : [true, false]
 for (const part of [1, 2]) {
-	for (const example of [true, false]) {
+	for (const example of runExamples) {
 		const rawExpected = await getExpectedOutput(day, part, example)
 		const output = await runSolution(day, part, example)
 		if (output === null) continue
