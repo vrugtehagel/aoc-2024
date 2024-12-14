@@ -26,8 +26,9 @@ export function solution(input: string): number {
 	// in only the row or column direction, and calculate the variance of the
 	// robots. For example, we count the amount of robots in each column. This
 	// repeats every `width` seconds (so we don't need to check beyond that)
-	// and if the robots are bunched up then the variance will spike.
-	function getDirectionalBunchUp(dir: 'x' | 'y') {
+	// and if the robots are bunched up then the variance will spike. So we
+	// return the amount of `seconds` after which the variance is highest.
+	function getDirectionalBunchUp(dir: 'x' | 'y'): number {
 		let maxVariance = -1
 		let time = -1
 		const squareOfMean = (robots.length / size[dir]) ** 2
@@ -50,6 +51,7 @@ export function solution(input: string): number {
 		return time
 	}
 
+	// When do they bunch up in the x and y direction?
 	const bunchup = {
 		x: getDirectionalBunchUp('x'),
 		y: getDirectionalBunchUp('y'),
@@ -64,5 +66,6 @@ export function solution(input: string): number {
 	}
 
 	// We didn't find the Christmas tree :(
+	// This can only happen if the bunchups in each direction never overlaps
 	return -1
 }
