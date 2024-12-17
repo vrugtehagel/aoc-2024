@@ -9,7 +9,10 @@ for (let day = 1; day <= maxDay; day++) {
 		const ignore = !expected
 		const fn = async () => {
 			const result = await runSolution(day, part, false, true)
-			if (result != expected) throw Error(`Day ${day} failed!`)
+			const perfect = result == expected
+			const probablyFine = `${result}`.trim() == expected?.trim()
+			const ok = perfect || probablyFine
+			if (!ok) throw Error(`Day ${day} failed!`)
 		}
 		Deno.test({ name, ignore, fn })
 	}
