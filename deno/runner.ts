@@ -10,6 +10,8 @@ export async function runSolution(
 	if (!solutionFile) return null
 	const run = solutionFile.endsWith('.wat') ? runWATSolution : runJSSolution
 	const result = await run(solutionFile, day, part, example, skipCompilation)
+	if (result == null) return null
+	if (typeof result == 'object') return `${result}`
 	return result
 }
 
