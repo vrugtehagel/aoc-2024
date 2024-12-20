@@ -36,12 +36,12 @@ export function solution(input: string): number {
 	// both between -1 and 1) are excluded because they don't let us skip to
 	// another point in the track.
 	const skips = []
-	for (let x = -20; x <= 20; x++) {
-		const remaining = 20 - Math.abs(x)
-		for (let y = -remaining; y <= remaining; y++) {
-			const skipped = Math.abs(x) + Math.abs(y)
-			if (Math.abs(x) <= 1 && Math.abs(y) <= 1) continue
-			skips.push([x, y, skipped])
+	for (let dx = -20; dx <= 20; dx++) {
+		const remaining = 20 - Math.abs(dx)
+		for (let dy = -remaining; dy <= remaining; dy++) {
+			const skipped = Math.abs(dx) + Math.abs(dy)
+			if (Math.abs(dx) <= 1 && Math.abs(dy) <= 1) continue
+			skips.push({ dx, dy, skipped })
 		}
 	}
 
@@ -56,10 +56,7 @@ export function solution(input: string): number {
 		for (let y = 1; y < height - 1; y++) {
 			if (track[y][x] == -1) continue
 			const time = track[y][x]
-			for (let index = 0; index < skips.length; index++) {
-				const dx = skips[index][0]
-				const dy = skips[index][1]
-				const skipped = skips[index][2]
+			for (const { dx, dy, skipped } of skips) {
 				const next = track[y + dy]?.[x + dx]
 				if (next == null || next == -1) continue
 				if (next > time - savings - skipped) continue
