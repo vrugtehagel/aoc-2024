@@ -10,31 +10,38 @@ export function solution(input: string): number {
 		return secret
 	}
 
-	// This time, we keep track of the last 4 differences in price, and add it
-	// to a map (only if it hasn't been seen before). Using an array for the
-	// last 4 items, and converting them to a string to use as map index, is
-	// very slow. So, instead, we use a single integer to represent the last 4
-	// differences. Specifically we use a base-32 integer where each digit
-	// is a difference plus 9 (to make it >= 0). This means we can use bit
-	// operations to push and shift items on and off of the last 4, and then
-	// directly use the number as map index.
-	const scores = new Map<number, number>()
+	// This time, we have to keep track of the differences from the past four
+	// "random" numbers (or, well, their last digit). This ends up being quite
+	// a few operations, so we allocate memory ourselves and throw basic
+	// mathematical operations at it. We translate a 4-sequence of differences
+	// into a base-19 number; we take the difference, add 9 (to make sure it
+	// ranges 0-18) and that represents a digit. This allows us to turn those
+	// 4-series in simple array indexes, which are fast to look up and write to.
+	// The "scores" array keeps track of the total scores for each 4-sequence.
+	// The "seen" array is reset for every monkey, and keeps track of which
+	// 4-sequence we've already seen (it holds booleans).
+	// We also keep track of the maximum while we're going through the monkeys,
+	// so that we don't have to calculate it afterwards.
+	const scores = new Uint32Array(130321)
+	const seen = new Uint8Array(130321)
+	let max = 0
 	for (let secret of secrets) {
 		let last4 = 0
 		let price = secret % 10
-		const seen = new Set<number>()
+		seen.fill(0)
 		for (let run = 1; run <= 2000; run++) {
 			secret = randomize(secret)
-			last4 = ((last4 << 5) & 0xFFFFF) + 9 + secret % 10 - price
+			last4 = ((last4 * 19) % 130321) + 9 + secret % 10 - price
 			price = secret % 10
 			if (price == 0) continue
 			if (run < 4) continue
-			if (seen.has(last4)) continue
-			seen.add(last4)
-			scores.set(last4, (scores.get(last4) ?? 0) + price)
+			if (seen[last4]) continue
+			seen[last4] = 1
+			scores[last4] += price
+			if (scores[last4] > max) max = scores[last4]
 		}
 	}
 
 	// Return the maximum number of bananas we can sell for
-	return Math.max(...scores.values())
+	return max
 }
