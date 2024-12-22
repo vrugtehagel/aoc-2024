@@ -1,47 +1,65 @@
-export function solution(input: string): number {
+export async function solution(input: string): number {
 	// Each line is a number
-	const secrets = input.trim().split('\n').map((line) => Number(line))
+	const secrets = new Uint32Array(input.trim().split('\n').map(Number))
 
-	// The recipe to "randomize" a secret
-	function randomize(secret: number): number {
-		secret = ((secret << 6) ^ secret) & 0xFFFFFF
-		secret = (secret >>> 5) ^ secret
-		secret = ((secret << 11) ^ secret) & 0xFFFFFF
-		return secret
-	}
+	const start = performance.now()
+	const adapter = await navigator.gpu.requestAdapter()
+	const device = await adapter?.requestDevice()
+	if(!device) throw Error('No GPU adapter or device found')
 
-	// This time, we have to keep track of the differences from the past four
-	// "random" numbers (or, well, their last digit). This ends up being quite
-	// a few operations, so we allocate memory ourselves and throw basic
-	// mathematical operations at it. We translate a 4-sequence of differences
-	// into a base-19 number; we take the difference, add 9 (to make sure it
-	// ranges 0-18) and that represents a digit. This allows us to turn those
-	// 4-series in simple array indexes, which are fast to look up and write to.
-	// The "scores" array keeps track of the total scores for each 4-sequence.
-	// The "seen" array is reset for every monkey, and keeps track of which
-	// 4-sequence we've already seen (it holds booleans).
-	// We also keep track of the maximum while we're going through the monkeys,
-	// so that we don't have to calculate it afterwards.
-	const scores = new Uint32Array(130321)
-	const seen = new Uint8Array(130321)
+	const url = new URL('./part-2.wgsl', import.meta.url)
+	const code = await Deno.readTextFile(url)
+	const module = device.createShaderModule({ code })
+
+	const inputBuffer = device.createBuffer({
+		mappedAtCreation: true,
+		size: secrets.byteLength,
+		usage: GPUBufferUsage.STORAGE,
+	})
+	new Uint32Array(inputBuffer.getMappedRange()).set(secrets)
+	inputBuffer.unmap()
+
+	const outputBuffer = device.createBuffer({
+		size: 4 * 19 ** 4,
+		usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC,
+	})
+
+	const pipeline = device.createComputePipeline({
+		layout: 'auto',
+		compute: { module, entryPoint: 'main' },
+	})
+
+	const group = device.createBindGroup({
+		layout: pipeline.getBindGroupLayout(0),
+		entries: [
+			{ binding: 0, resource: { buffer: inputBuffer } },
+			{ binding: 1, resource: { buffer: outputBuffer } },
+		],
+	})
+
+	const command = device.createCommandEncoder()
+	const pass = command.beginComputePass()
+	pass.setPipeline(pipeline)
+	pass.setBindGroup(0, group)
+	pass.dispatchWorkgroups(Math.ceil(secrets.length / 256))
+	pass.end()
+
+	const readBuffer = device.createBuffer({
+		size: 4 * 19 ** 4,
+		usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+	})
+	command.copyBufferToBuffer(outputBuffer, 0, readBuffer, 0, 4 * 19 ** 4)
+
+	device.queue.submit([command.finish()])
+
+	await readBuffer.mapAsync(GPUMapMode.READ)
+	const result = new Uint32Array(readBuffer.getMappedRange())
 	let max = 0
-	for (let secret of secrets) {
-		let last4 = 0
-		let price = secret % 10
-		seen.fill(0)
-		for (let run = 1; run <= 2000; run++) {
-			secret = randomize(secret)
-			last4 = ((last4 * 19) % 130321) + 9 + secret % 10 - price
-			price = secret % 10
-			if (price == 0) continue
-			if (run < 4) continue
-			if (seen[last4]) continue
-			seen[last4] = 1
-			scores[last4] += price
-			if (scores[last4] > max) max = scores[last4]
-		}
+	for(const price of result){
+		if(max < price) max = price
 	}
+	readBuffer.unmap()
+	device.destroy()
 
-	// Return the maximum number of bananas we can sell for
 	return max
 }
