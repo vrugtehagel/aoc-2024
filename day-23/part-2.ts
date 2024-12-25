@@ -41,7 +41,7 @@ export function solution(input: string): string {
 
 	// Finds a network of a certain size within the input data.
 	function findNetwork(size: number): null | Set<string> {
-		for (const [computer, connected] of computers) {
+		for (const connected of computers.values()) {
 			const network = findNetworkWithin(connected, size)
 			if (network) return network
 		}
