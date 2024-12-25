@@ -17,7 +17,7 @@ export function solution(input: string): number {
 	const networks = new Set<string>()
 	for (const [computer1, connections] of computers) {
 		for (const computer2 of connections) {
-			const overlap = computers.get(computer2).intersection(connections)
+			const overlap = computers.get(computer2)!.intersection(connections)
 			for (const computer3 of overlap) {
 				const computers = [computer1, computer2, computer3]
 				if (!computers.some((computer) => computer[0] == 't')) continue

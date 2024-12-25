@@ -1,7 +1,7 @@
 export function solution(input: string): number {
 	// A wire will be represented as a function that recursively retrieves its
 	// value through its parents.
-	const wires = new Map<string, () => number>()
+	const wires: Record<string, () => number> = {}
 
 	// Operations, so we can look them up easily later
 	const operations = {
@@ -23,7 +23,7 @@ export function solution(input: string): number {
 	for (const rawGate of rawGates.split('\n')) {
 		const [wire1, operation, wire2, _, out] = rawGate.split(' ')
 		let value
-		const gate = operations[operation]
+		const gate = operations[operation as keyof typeof operations]
 		wires[out] = () => value ??= gate(wires[wire1](), wires[wire2]())
 	}
 

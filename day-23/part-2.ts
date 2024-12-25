@@ -8,14 +8,14 @@ export function solution(input: string): string {
 		const [from, to] = rawLink.split('-')
 		computers.get(from)?.add(to) ?? computers.set(from, new Set([to]))
 		computers.get(to)?.add(from) ?? computers.set(to, new Set([from]))
-		computers.get(from).add(from)
-		computers.get(to).add(to)
+		computers.get(from)!.add(from)
+		computers.get(to)!.add(to)
 	}
 
 	// Checks if a set of computers are all individually connected to each other
 	function isNetwork(group: Set<string>): boolean {
 		for (const computer of group) {
-			const connected = computers.get(computer)
+			const connected = computers.get(computer)!
 			if (!group.isSubsetOf(connected)) return false
 		}
 		return true
@@ -59,5 +59,5 @@ export function solution(input: string): string {
 	}
 
 	// This can't happen because we know already there are networks of size 2
-	return null
+	return ''
 }
