@@ -1,9 +1,10 @@
 import { getExpectedOutput, runSolution } from './runner.ts'
 
 const now = new Date()
-const maxDay = now.getFullYear() == 2024 ? now.getDate() : 31
+const maxDay = now.getFullYear() == 2024 ? Math.min(now.getDate(), 25) : 25
 for (let day = 1; day <= maxDay; day++) {
-	for (const part of [1, 2]) {
+	const parts = day < 25 ? [1, 2] : [1]
+	for (const part of parts) {
 		const expected = await getExpectedOutput(day, part)
 		const name = `Day ${day}, part ${part}`
 		const ignore = !expected
