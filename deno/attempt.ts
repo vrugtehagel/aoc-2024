@@ -9,6 +9,7 @@ const runExamples = onlyExample ? [true] : [true, false]
 for (const part of [1, 2]) {
 	for (const example of runExamples) {
 		const rawExpected = await getExpectedOutput(day, part, example)
+		if (example && rawExpected === null) continue
 		const output = await runSolution(day, part, example)
 		if (output === null) continue
 		const expected = rawExpected?.includes(`${Number(rawExpected)}`)
