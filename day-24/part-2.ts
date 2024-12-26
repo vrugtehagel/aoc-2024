@@ -57,34 +57,37 @@ export function solution(input: string): string {
 	// connections they are, or what gate they are using. So after we determine
 	// their positions all we need to do is check the output wires.
 	function validate(digit: Set<Gate>): string[] {
-		const swap = new Set<string>()
 		const ids = new Set<string>()
 		const suffix = [...digit]
-			.find((gate) => /^[xy]/.test(gate.in[0])).in[0].slice(1)
+			.find((gate) => /^[xy]/.test(gate.in[0]))!.in[0].slice(1)
 		if (suffix == '00') return []
 		const xNN = 'x' + suffix
 		const zNN = 'z' + suffix
-		for (const gate of digit) ids.add(gate.in1).add(gate.in2).add(gate.out)
+		for (const gate of digit) {
+			ids.add(gate.in[0])
+			ids.add(gate.in[1])
+			ids.add(gate.out)
+		}
 		const a = [...digit].find((gate) => {
 			return gate.operation == 'XOR' && gate.in.includes(xNN)
-		})
+		})!
 		const b = [...digit].find((gate) => {
 			return gate.operation == 'AND' && gate.in.includes(xNN)
-		})
+		})!
 		const c = [...digit].find((gate) => {
 			return gate.operation == 'AND' && gate != b
-		})
+		})!
 		const d = [...digit].find((gate) => {
 			return gate.operation == 'OR'
-		})
+		})!
 		const z = [...digit].find((gate) => {
 			return gate.operation == 'XOR' && gate != a
-		})
-		const aOut = c.in.find((id) => ids.has(id))
+		})!
+		const aOut = c.in.find((id) => ids.has(id))!
 		if (aOut != a.out) return [a.out, aOut]
-		const bOut = d.in.find((id) => id != c.out)
+		const bOut = d.in.find((id) => id != c.out)!
 		if (bOut != b.out) return [b.out, bOut]
-		const cOut = d.in.find((id) => id != b.out)
+		const cOut = d.in.find((id) => id != b.out)!
 		if (cOut != c.out) return [c.out, cOut]
 		if (zNN != z.out) return [z.out, zNN]
 		return []
@@ -110,6 +113,6 @@ export function solution(input: string): string {
 
 type Gate = {
 	in: string[]
-	operation: 'OR' | 'XOR' | 'AND'
+	operation: string
 	out: string
 }
