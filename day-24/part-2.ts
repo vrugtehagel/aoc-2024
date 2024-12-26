@@ -63,11 +63,7 @@ export function solution(input: string): string {
 		if (suffix == '00') return []
 		const xNN = 'x' + suffix
 		const zNN = 'z' + suffix
-		for (const gate of digit) {
-			ids.add(gate.in[0])
-			ids.add(gate.in[1])
-			ids.add(gate.out)
-		}
+		for (const gate of digit) ids.add(gate.out)
 		const a = [...digit].find((gate) => {
 			return gate.operation == 'XOR' && gate.in.includes(xNN)
 		})!
